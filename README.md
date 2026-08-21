@@ -15,7 +15,7 @@ git clone <this-repo>
 cd cognodb-benchmark
 cp .env.example .env        # fill in your own free-tier credentials
 pip install -r requirements.txt
-docker compose up -d        # starts ArangoDB + FalkorDB, capped to 0.5vCPU/256MB
+docker compose up -d        # starts Memgraph + ArangoDB + FalkorDB, each capped to 0.5vCPU/256MB
 python dataset/download_dataset.py
 python -m harness.run_all
 python -m harness.report_generator
@@ -81,8 +81,10 @@ apples-to-oranges factor in this benchmark and is called out again in
 
 [SNAP soc-Pokec](https://snap.stanford.edu/data/soc-Pokec.html) social
 network, deterministic seeded sample (see `dataset/download_dataset.py`):
-~120,000 nodes / 200,000 directed relationships. Same two CSVs loaded into
-every platform with the same batch size (1,000 rows/batch).
+~120,000 directed relationships (node count follows from however many
+distinct nodes touch that sample — see `results/RESULTS.md` for the exact
+figures from your run). Same two CSVs loaded into every platform with the
+same batch size (2,000 rows/batch).
 
 ## Methodology
 

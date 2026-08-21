@@ -8,7 +8,9 @@ Full graph: 1,632,803 nodes / 30,622,564 edges.
 We take a deterministic subgraph (induced by the first N edges after a
 seeded shuffle of the edge list) sized to comfortably fit inside every
 platform's smallest free tier (CognoDB free tier: 256MB RAM / 1GB disk).
-Target: ~120k nodes / 200k relationships by default (see .env REL_LIMIT).
+Target: ~120,000 relationships by default (see .env DATASET_REL_LIMIT),
+node count follows automatically from however many distinct nodes touch
+that many sampled edges.
 
 Output: dataset/pokec_sample.csv  (columns: src,dst)
         dataset/pokec_nodes.csv   (column: node_id)
@@ -24,6 +26,10 @@ import random
 import sys
 import urllib.request
 from pathlib import Path
+
+from dotenv import load_dotenv
+
+load_dotenv(dotenv_path=Path(__file__).parent.parent / ".env")
 
 SNAP_URL = "https://snap.stanford.edu/data/soc-pokec-relationships.txt.gz"
 RAW_PATH = Path(__file__).parent / "soc-pokec-relationships.txt.gz"
