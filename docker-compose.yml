@@ -1,0 +1,37 @@
+# Self-hosted platforms, capped to the SAME resources as the CognoDB free
+# tier (0.5 vCPU / 256MB RAM) so no platform gets a hardware advantage.
+# Cloud-managed platforms (CognoDB, AuraDB Free) are used via their own
+# free tiers instead — their advertised specs are recorded in README.md's
+# methodology table. Memgraph moved to self-hosted here too (see README
+# "Known Fairness Limitation" — its cloud offering only exposed a raw IP,
+# which breaks TLS hostname verification; self-hosted also gives an exact,
+# guaranteed resource cap instead of relying on the cloud trial's specs).
+version: "3.8"
+
+services:
+  arangodb:
+    image: arangodb:3.12
+    container_name: bench-arangodb
+    environment:
+      ARANGO_ROOT_PASSWORD: arangobench
+    ports:
+      - "8529:8529"
+    mem_limit: 256m
+    cpus: 0.5
+
+  falkordb:
+    image: falkordb/falkordb:latest
+    container_name: bench-falkordb
+    ports:
+      - "6379:6379"
+    mem_limit: 256m
+    cpus: 0.5
+
+  memgraph:
+    image: memgraph/memgraph:latest
+    container_name: bench-memgraph
+    ports:
+      - "7688:7687"   # host 7688 -> avoids clashing with any local 7687 usage
+    mem_limit: 256m
+    cpus: 0.5
+    command: ["--log-level=WARNING"]
